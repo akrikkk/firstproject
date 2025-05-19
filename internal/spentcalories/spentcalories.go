@@ -1,13 +1,10 @@
 package spentcalories
 
 import (
-<<<<<<< HEAD
 	"errors"
 	"fmt"
 	"strconv"
 	"strings"
-=======
->>>>>>> origin/main
 	"time"
 )
 
@@ -21,7 +18,6 @@ const (
 )
 
 func parseTraining(data string) (int, string, time.Duration, error) {
-<<<<<<< HEAD
 	slice := strings.Fields(data)
 	if len(slice) != 3 {
 		return 0, "", 0, fmt.Errorf("expected 3 values, got")
@@ -50,22 +46,10 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 	kilometers := distance(steps, height)
 	durationInHours := duration.Hours()
 	return kilometers / durationInHours
-=======
-	// TODO: реализовать функцию
-}
-
-func distance(steps int, height float64) float64 {
-	// TODO: реализовать функцию
-}
-
-func meanSpeed(steps int, height float64, duration time.Duration) float64 {
-	// TODO: реализовать функцию
->>>>>>> origin/main
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
 	// TODO: реализовать функцию
-<<<<<<< HEAD
 	steps, typeOfTreaning, t, err := parseTraining(data)
 	kilometers := distance(steps, height)
 	speed := meanSpeed(steps, height, t)
@@ -111,14 +95,4 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 	durationInMinutes := duration.Minutes()
 	calories := (weight * averageSpeed * durationInMinutes) / minInH
 	return (walkingCaloriesCoefficient * calories), nil
-=======
-}
-
-func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
-}
-
-func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
-	// TODO: реализовать функцию
->>>>>>> origin/main
 }

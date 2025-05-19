@@ -1,7 +1,6 @@
 package daysteps
 
 import (
-<<<<<<< HEAD
 	"errors"
 	"fmt"
 	"strconv"
@@ -12,23 +11,14 @@ import (
 )
 
 const (
-	stepLength = 0.65 // Длина одного шага в метрах
-	mInKm      = 1000 // Количество метров в одном километре
-=======
-	"time"
-)
-
-const (
 	// Длина одного шага в метрах
 	stepLength = 0.65
 	// Количество метров в одном километре
 	mInKm = 1000
->>>>>>> origin/main
 )
 
 func parsePackage(data string) (int, time.Duration, error) {
 	// TODO: реализовать функцию
-<<<<<<< HEAD
 	slice := strings.Split(data, ",")
 	if len(slice) != 2 {
 		return 0, 0, errors.New("expected format 'steps,duration'")
@@ -48,13 +38,10 @@ func parsePackage(data string) (int, time.Duration, error) {
 	}
 
 	return steps, duration, nil
-=======
->>>>>>> origin/main
 }
 
 func DayActionInfo(data string, weight, height float64) string {
 	// TODO: реализовать функцию
-<<<<<<< HEAD
 	steps, duration, err := parsePackage(data)
 	if err != nil {
 		return fmt.Sprintf("Error in data %q: %v", data, err)
@@ -76,6 +63,4 @@ func DayActionInfo(data string, weight, height float64) string {
 			"Дистанция: %.2f km\n"+
 			"Калорий сожжено: %.2f kcal",
 		steps, distance, calories)
-=======
->>>>>>> origin/main
 }
