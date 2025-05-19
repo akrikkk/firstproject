@@ -49,51 +49,38 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 }
 
 func TrainingInfo(data string, weight, height float64) (string, error) {
+	// TODO: реализовать функцию
 	steps, typeOfTreaning, t, err := parseTraining(data)
+	kilometers := distance(steps, height)
+	speed := meanSpeed(steps, height, t)
 	if err != nil {
 		return " ", nil
 	}
+	var calories float64
 	switch typeOfTreaning {
-	case "Ходьба":
-		kilometers := distance(steps, height)
-		averageSpeed := meanSpeed(steps, height, t)
-		durationInMinutes := t.Minutes()
-		durationHours := t.Hours()
-		calories := ((weight * averageSpeed * durationInMinutes) / minInH) * walkingCaloriesCoefficient
-		return fmt.Sprintf(
-			"Тип тренировки: %s\n"+
-				"Длительность: %.2f ч.\n"+
-				"Дистанция: %.2f км\n"+
-				"Скорость: %.2f км/ч\n"+
-				"Сожгли калорий: %.2f",
-			typeOfTreaning,
-			durationHours,
-			kilometers,
-			averageSpeed,
-			calories), nil
 	case "Бег":
-		kilometers := distance(steps, height)
-		averageSpeed := meanSpeed(steps, height, t)
-		durationInMinutes := t.Minutes()
-		durationHours := t.Hours()
-		calories := ((weight * averageSpeed * durationInMinutes) / minInH) * walkingCaloriesCoefficient
-		return fmt.Sprintf(
-			"Тип тренировки: %s\n"+
-				"Длительность: %.2f ч.\n"+
-				"Дистанция: %.2f км\n"+
-				"Скорость: %.2f км/ч\n"+
-				"Сожгли калорий: %.2f",
-			typeOfTreaning,
-			durationHours,
-			kilometers,
-			averageSpeed,
-			calories), nil
+		calories, err = RunningSpentCalories(steps, weight, height, t)
+	case "Ходьба":
+		calories, err = WalkingSpentCalories(steps, weight, height, t)
+	default:
+		return "", errors.New("неизвестный тип тренировки")
 	}
+	if err != nil {
+		return "", nil
+	}
+	result := fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км\nСкорость: %.2f км/ч\nСожжено калорий: %.2f",
+		typeOfTreaning,
+		t.Hours(),
+		kilometers,
+		speed,
+		calories,
+	)
+	return result, nil
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
-		return 0, errors.New("Incorrect parameter format")
+		return 0, errors.New("incorrect parameter format, all parameters must be more tahn 0")
 	}
 	AverageSpeed := meanSpeed(steps, height, duration)
 	durationInMinutes := duration.Minutes()
@@ -102,7 +89,7 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 || weight <= 0 || height <= 0 || duration <= 0 {
-		return 0, errors.New("Incorrect parameter format")
+		return 0, errors.New("incorrect parameter format, all parameters must be more tahn 0")
 	}
 	averageSpeed := meanSpeed(steps, height, duration)
 	durationInMinutes := duration.Minutes()
