@@ -1,7 +1,6 @@
 package daysteps
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -10,6 +9,7 @@ import (
 	"github.com/Yandex-Practicum/tracker/internal/spentcalories"
 )
 
+// я простоне понимаю, что длеаю не так, по идеи вывод корректный, логика правильная, прошу прощения за мой тупизм(
 const (
 	// Длина одного шага в метрах
 	stepLength = 0.65
@@ -17,24 +17,36 @@ const (
 	mInKm = 1000
 )
 
-func parsePackage(data string) (int, time.Duration, error) {
-	// TODO: реализовать функцию
-	slice := strings.Split(data, ",")
-	if len(slice) != 2 {
-		return 0, 0, errors.New("expected format 'steps,duration'")
+func parsePackage(input string) (steps int, duration time.Duration, err error) {
+	input = strings.ReplaceAll(input, " ", "")
+
+	if input == "" {
+		return 0, 0, fmt.Errorf("пустая строка")
 	}
 
-	steps, err := strconv.Atoi(slice[0])
-	if err != nil {
-		return 0, 0, err
+	parts := strings.Split(input, ",")
+	if len(parts) != 2 {
+		return 0, 0, fmt.Errorf("неверный формат данных")
 	}
-	if steps <= 0 {
-		return 0, 0, err
-	}
-
-	duration, err := time.ParseDuration(slice[1])
+	steps, err = strconv.Atoi(parts[0])
 	if err != nil {
-		return 0, 0, err
+		return 0, 0, fmt.Errorf("неверный формат шагов")
+	}
+	if steps < 0 {
+		return 0, 0, fmt.Errorf("отрицательные шаги")
+	}
+	if steps == 0 {
+		return 0, 0, fmt.Errorf("ноль шагов")
+	}
+	duration, err = time.ParseDuration(parts[1])
+	if err != nil {
+		return 0, 0, fmt.Errorf("неверный формат продолжительности")
+	}
+	if duration < 0 {
+		return 0, 0, fmt.Errorf("отрицательная продолжительность")
+	}
+	if duration == 0 {
+		return 0, 0, fmt.Errorf("нулевая продолжительность")
 	}
 
 	return steps, duration, nil
@@ -44,7 +56,7 @@ func DayActionInfo(data string, weight, height float64) string {
 	// TODO: реализовать функцию
 	steps, duration, err := parsePackage(data)
 	if err != nil {
-		return fmt.Sprintf("Error in data %q: %v", data, err)
+		return ""
 	}
 
 	if weight <= 0 || height <= 0 {
@@ -59,8 +71,8 @@ func DayActionInfo(data string, weight, height float64) string {
 	distance := float64(steps) * stepLength / mInKm
 
 	return fmt.Sprintf(
-		"Шаги: %d\n"+
-			"Дистанция: %.2f km\n"+
-			"Калорий сожжено: %.2f kcal",
+		"Количество шагов: %d.\n"+
+			"Дистанция составила %.2f км.\n"+
+			"Вы сожгли %.2f ккал.\n",
 		steps, distance, calories)
 }
